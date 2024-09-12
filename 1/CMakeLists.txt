@@ -11,7 +11,6 @@ include_directories(lib/ioutil)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 
 add_subdirectory(lib/syllables_divider)
-add_subdirectory(lib/catch2)
 
 file(GLOB_RECURSE SRC_FILES "${PROJECT_SOURCE_DIR}/src/*.cpp")
 
@@ -40,6 +39,7 @@ endif (DOXYGEN)
 # tests
 
 if (TESTING)
+    find_package(Catch2 REQUIRED)
     file(GLOB_RECURSE TEST_FILES "${PROJECT_SOURCE_DIR}/tests/*.cpp")
 
     set (ALL_TESTS all_tests)
