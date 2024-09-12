@@ -5,22 +5,22 @@
 
 namespace {
 /** \brief Check if letter `c` is in alphabeth `str` */
-static inline bool is_in_alp(const std::wstring &str, wchar_t c) {
+static inline bool is_in_alp(const std::wstring &str, wchar_t c) noexcept {
     return str.find(c) != -1;
 }
 
 /** \brief Check if letter is vowel */
-static inline bool is_vowel(wchar_t c) {
+static inline bool is_vowel(wchar_t c) noexcept {
     return is_in_alp(L"АЕЁИОУЭЮЯаеёиоуыэюя", c);
 }
 
 /** \brief Check if letter is unpaired consonant */
-static inline bool is_unpaired(wchar_t c) {
+static inline bool is_unpaired(wchar_t c) noexcept {
     return is_in_alp(L"ЙЛМРНйлмнр", c);
 }
 
 /** \brief Check if letter is in russian alphabeth */
-static inline bool is_russian(wchar_t c) {
+static inline bool is_russian(wchar_t c) noexcept {
     return is_in_alp(
         L"АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя", c
     );
@@ -28,7 +28,9 @@ static inline bool is_russian(wchar_t c) {
 
 /** \brief Check if letter represents a special sign and need to be handled in
  * different way than others */
-static inline bool is_special(wchar_t c) { return is_in_alp(L"Ййъь", c); }
+static inline bool is_special(wchar_t c) noexcept {
+    return is_in_alp(L"Ййъь", c);
+}
 
 /** \brief Check if the word given matches the rules of russian language */
 static inline void check_word(std::wstring str) {
@@ -53,7 +55,8 @@ static inline void check_word(std::wstring str) {
 
 }; // namespace
 
-const wchar_t *SyllablesDivider::next_syll_end(const wchar_t *ptr) const {
+const wchar_t *SyllablesDivider::next_syll_end(const wchar_t *ptr
+) const noexcept {
     if ((ptr = std::find_if(ptr, strend, is_vowel)) == strend) return strend;
 
     ptr += 1;

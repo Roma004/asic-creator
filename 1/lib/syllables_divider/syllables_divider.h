@@ -35,7 +35,7 @@ class SyllablesDivider {
      *
      * @return pointer to the end of syllable
      * */
-    const wchar_t *next_syll_end(const wchar_t *ptr) const;
+    const wchar_t *next_syll_end(const wchar_t *ptr) const noexcept;
 
     /**
      * @protected

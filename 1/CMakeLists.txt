@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(lab1 VERSION 0.0.1 LANGUAGES CXX)
 
-add_definitions("-ggdb3 -O0 -std=c++20")
+add_definitions("-ggdb3 -O3 -std=c++20")
 
 include_directories(include)
 include_directories(lib/syllables_divider)
@@ -24,7 +24,7 @@ target_link_libraries(lab1 syllables_divider)
 if (DOXYGEN)
     find_package(Doxygen)
     if (DOXYGEN_FOUND)
-        set(DOXYFILE ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in)
+        set(DOXYFILE ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile)
 
         add_custom_target(doc_doxygen ALL
             COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYFILE}

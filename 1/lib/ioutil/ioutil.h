@@ -31,7 +31,8 @@ template <class T> using sview = std::basic_string_view<T>;
  * @param chr -- character to skip if is at the top of stream
  */
 template <class Chr>
-static inline void stream_ignore(std::basic_istream<Chr> &in, Chr chr) {
+static inline void
+stream_ignore(std::basic_istream<Chr> &in, Chr chr) noexcept {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), chr);
 }
 
@@ -42,7 +43,7 @@ static inline void stream_ignore(std::basic_istream<Chr> &in, Chr chr) {
  */
 template <class Chr>
 static inline void
-stream_ignore(std::basic_istream<Chr> &in, const sview<Chr> &barrier) {
+stream_ignore(std::basic_istream<Chr> &in, const sview<Chr> &barrier) noexcept {
     size_t i;
     while ((i = barrier.find(in.peek())) != -1) {
         stream_ignore(in, barrier[i]);
@@ -55,9 +56,36 @@ stream_ignore(std::basic_istream<Chr> &in, const sview<Chr> &barrier) {
  * @param barrier -- list of characters to check
  */
 template <class Chr>
-static inline bool
-is_stream_barrier(std::basic_istream<Chr> &in, const sview<Chr> &barrier) {
+static inline bool is_stream_barrier(
+    std::basic_istream<Chr> &in, const sview<Chr> &barrier
+) noexcept {
     return !in.eof() && barrier.find(in.peek()) != -1;
+}
+
+/**
+ * @brief tries to extract value from stream, till one of characters specified
+ * @param in -- stream to work with
+ * @param val -- reference to the container to store value
+ * @param barrier -- list of barrier characters
+ * @return true if read succeeded, false overwise
+ * @throw std::ios_base::failure on stream inner allocation issue
+ * @throw IOUtil::eof_exception on EOF character got from stream
+ */
+template <class Chr>
+static inline bool stream_try_extract(
+    std::basic_istream<Chr> &in, auto &val, const sview<Chr> &barrier
+) {
+    in >> val;
+    if (in.eof()) throw eof_exception();
+    if (in.bad())
+        throw std::ios_base::failure("stream is unable to process value");
+    if (in.fail()) {
+        in.clear();
+        stream_ignore(in, barrier);
+        return false;
+    }
+    if (!is_stream_barrier(in, barrier)) return false;
+    return true;
 }
 
 /**
@@ -67,7 +95,7 @@ is_stream_barrier(std::basic_istream<Chr> &in, const sview<Chr> &barrier) {
  * @param barrier -- list of barrier characters
  * @param on_retry -- function called, if extraction was not syccessfull. It may
  * print something to stderr or throw custom exception etc.
- * @throw std::bad_alloc on stream inner allocation issue
+ * @throw std::ios_base::failure on stream inner allocation issue
  * @throw IOUtil::eof_exception on EOF character got from stream
  */
 template <class Chr>
@@ -77,20 +105,8 @@ void istream_get(
     const sview<Chr> &barrier,
     std::function<void(void)> on_retry
 ) {
-    while (true) {
-        in >> val;
-        if (in.eof()) throw eof_exception();
-        if (in.bad()) throw std::bad_alloc();
-        if (in.fail()) {
-            in.clear();
-            stream_ignore(in, barrier);
-            goto retry;
-        }
-        if (!is_stream_barrier(in, barrier)) goto retry;
-        break;
-    retry:
+    while (!stream_try_extract(in, val, barrier))
         on_retry();
-    }
 }
 
 /**
@@ -98,7 +114,7 @@ void istream_get(
  * @param prompt -- string to print to stdout before reading
  * @param val -- reference to the container to store value
  * @param barrier -- list of barrier characters
- * @throw std::bad_alloc on stdin inner allocation issue
+ * @throw std::ios_base::failure on stream inner allocation issue
  * @throw IOUtil::eof_exception on EOF character got from stream
  */
 void stdin_get(const char *prompt, auto &val, const char *barrier = " \n\t") {
@@ -113,7 +129,7 @@ void stdin_get(const char *prompt, auto &val, const char *barrier = " \n\t") {
  * @param prompt -- string to print to wstdout before reading
  * @param val -- reference to the container to store value
  * @param barrier -- list of barrier characters
- * @throw std::bad_alloc on stdin inner allocation issue
+ * @throw std::ios_base::failure on stream inner allocation issue
  * @throw IOUtil::eof_exception on EOF character got from stream
  */
 void wstdin_get(

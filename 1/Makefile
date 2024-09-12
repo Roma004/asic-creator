@@ -24,6 +24,7 @@ test: cmake
 	$(MAKE) -C $(BUILD_DIR) all_tests
 	./build/all_tests
 	gcovr -e main.cpp -e lib/catch2 -e tests/
+	gcovr -e main.cpp -e lib/catch2 -e tests/ --html-details build/coverage.html
 
 clean-build:
 	$(MAKE) -C $(BUILD_DIR) clean
