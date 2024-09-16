@@ -8,13 +8,13 @@
 #include <initializer_list>
 #include <iostream>
 #include <ostream>
-#include <vector>
+#include <tri-register-container.hpp>
 
 /**
  * @brief class for processing registers (sequences) of \ref Tristate
  */
 class TriRegister {
-    std::vector<Tristate> signals;
+    TriRegisterContainer signals;
 
   public:
     /**
@@ -36,13 +36,15 @@ class TriRegister {
         virtual char const *what() const noexcept;
     };
     /** @brief regular forwards iterator */
-    using iter = std::vector<Tristate>::iterator;
+    using iter = TriRegisterContainer::iterator;
     /** @brief constant forwards iterator */
-    using citer = std::vector<Tristate>::const_iterator;
+    using citer = TriRegisterContainer::const_iterator;
     /** @brief regular backwards iterator */
-    using riter = std::vector<Tristate>::reverse_iterator;
+    using riter = TriRegisterContainer::reverse_iterator;
     /** @brief constant backwards iterator */
-    using rciter = std::vector<Tristate>::const_reverse_iterator;
+    using rciter = TriRegisterContainer::const_reverse_iterator;
+
+    using reference = TriRegisterContainer::reference;
 
     /** @brief make zero-length register by default */
     TriRegister() = default;
@@ -70,13 +72,13 @@ class TriRegister {
 
     /** @brief output register as a string to std::ostream */
     friend std::ostream &operator<<(std::ostream &out, const TriRegister &reg) {
-        std::ranges::for_each(reg, [&out](const Tristate &st) { out << st; });
+        std::ranges::for_each(reg, [&out](auto st) { out << (Tristate)st; });
         return out;
     }
 
     /** @brief input register as a string from std::istream */
     friend std::istream &operator>>(std::istream &in, TriRegister &reg) {
-        std::ranges::for_each(reg, [&in](Tristate &st) { in >> st; });
+        std::ranges::for_each(reg, [&in](auto st) { in >> st; });
         return in;
     }
 
@@ -86,7 +88,7 @@ class TriRegister {
      * @return constant reference to the corresponding signal
      * @throw std::index_error on invalid index
      * */
-    Tristate &operator[](int idx);
+    reference operator[](int idx);
 
     /** @brief tritwise inversion (binary NOT \ref TristateLogic) */
     TriRegister operator~() const noexcept;

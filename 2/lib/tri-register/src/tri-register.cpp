@@ -1,9 +1,10 @@
 #include "tri-register.hpp"
+#include "tri-register-container.hpp"
 #include "tristate.hpp"
 #include <algorithm>
 #include <cstring>
 #include <ranges>
-#include <vector>
+#include <tuple>
 
 TriRegister::reg_length_error::reg_length_error(
     const TriRegister &a, const TriRegister &b, const char *op
@@ -29,12 +30,12 @@ TriRegister::TriRegister(const auto *sgn, size_t n) noexcept :
 TriRegister::TriRegister(const char *str) noexcept :
     TriRegister(str, str + strlen(str)) {}
 
-Tristate &TriRegister::operator[](int idx) { return signals[idx]; }
+TriRegister::reference TriRegister::operator[](int idx) { return signals[idx]; }
 
 TriRegister TriRegister::operator|(const TriRegister &other) const {
     if (size() != other.size()) throw reg_length_error(*this, other, "|");
     auto applied = std::views::zip_transform(
-        [](auto a, auto b) { return a | b; }, *this, other
+        [](const Tristate &a, const Tristate &b) { return a | b; }, *this, other
     );
     return TriRegister(applied.begin(), applied.end());
 }
@@ -42,31 +43,34 @@ TriRegister TriRegister::operator|(const TriRegister &other) const {
 TriRegister TriRegister::operator&(const TriRegister &other) const {
     if (size() != other.size()) throw reg_length_error(*this, other, "&");
     auto applied = std::views::zip_transform(
-        [](auto a, auto b) { return a & b; }, *this, other
+        [](const Tristate &a, const Tristate &b) { return a & b; }, *this, other
     );
     return TriRegister(applied.begin(), applied.end());
 }
 
 TriRegister TriRegister::operator~() const noexcept {
-    auto applied = std::views::transform(*this, [](auto st) { return ~st; });
+    auto applied =
+        std::views::transform(*this, [](const Tristate &st) { return ~st; });
     return TriRegister(applied.begin(), applied.end());
 }
 
 TriRegister &TriRegister::operator|=(const TriRegister &other) {
+    using namespace std::ranges::views;
     if (size() != other.size()) throw reg_length_error(*this, other, "|=");
-    auto applied = std::views::zip_transform(
-        [](auto a, auto b) { return a | b; }, *this, other
+    auto applied = zip_transform(
+        [](const Tristate &a, const Tristate &b) { return a | b; }, *this, other
     );
-    std::copy(applied.begin(), applied.end(), begin());
+    for (auto &&[a, b] : zip(*this, applied)) a = b;
     return *this;
 }
 
 TriRegister &TriRegister::operator&=(const TriRegister &other) {
+    using namespace std::ranges::views;
     if (size() != other.size()) throw reg_length_error(*this, other, "&=");
-    auto applied = std::views::zip_transform(
-        [](auto a, auto b) { return a & b; }, *this, other
+    auto applied = zip_transform(
+        [](const Tristate &a, const Tristate &b) { return a & b; }, *this, other
     );
-    std::copy(applied.begin(), applied.end(), begin());
+    for (auto &&[a, b] : zip(*this, applied)) a = b;
     return *this;
 }
 
@@ -113,15 +117,19 @@ bool TriRegister::is_fully_defined() const noexcept {
 }
 
 void TriRegister::extend_left(const TriRegister &reg) noexcept {
-    std::vector<Tristate> new_signs(reg.size() + size());
-    std::ranges::copy(reg, new_signs.begin());
-    std::ranges::copy(*this, new_signs.begin() + reg.size());
+    TriRegisterContainer new_signs(reg.size() + size());
+    auto it = new_signs.begin();
+    auto copy = [&it](const Tristate &s){ *it = s; ++it; };
+    std::ranges::for_each(reg, copy);
+    std::ranges::for_each(*this, copy);
     signals = std::move(new_signs);
 }
 
 void TriRegister::extend_right(const TriRegister &reg) noexcept {
-    std::vector<Tristate> new_signs(reg.size() + size());
-    std::ranges::copy(*this, new_signs.begin());
-    std::ranges::copy(reg, new_signs.begin() + size());
+    TriRegisterContainer new_signs(reg.size() + size());
+    auto it = new_signs.begin();
+    auto copy = [&it](const Tristate &s){ *it = s; ++it; };
+    std::ranges::for_each(*this, copy);
+    std::ranges::for_each(reg, copy);
     signals = std::move(new_signs);
 }

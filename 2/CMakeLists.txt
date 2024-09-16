@@ -44,6 +44,10 @@ if (TESTING)
     find_package(Catch2 REQUIRED)
     file(GLOB_RECURSE TEST_FILES "${PROJECT_SOURCE_DIR}/tests/*.cpp")
 
+    # set(TEST_FILES
+    #     tests/test_tri_register_container.cpp
+    # )
+
     set (ALL_TESTS all_tests)
 
     add_executable(${ALL_TESTS} ${TEST_FILES} ${SRC_FILES})
