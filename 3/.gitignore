@@ -1,0 +1,6 @@
+.vim
+.cache
+compile_commands.json
+build
+doc
+tags

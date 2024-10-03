@@ -1,0 +1,154 @@
+{
+    "cpus": {
+        "rv1": {
+            "control": {
+                "id": "default-control-device",
+                "settings": {
+                    "pc": 16384,
+                    "control-executor": "ctrl",
+                    "control-port": "ctrl"
+                }
+            },
+            "ports": {
+                "ctrl": {
+                    "id": "port-rw1248i-ipkt",
+                    "bus-gate": "ctrl",
+                    "settings": {}
+                },
+                "sl": {
+                    "id": "port-rw1248i-ipkt",
+                    "bus-gate": "sl",
+                    "settings": {}
+                }
+            },
+            "executors": {
+                "ctrl": {
+                    "id": "synk-executor-device",
+                    "settings": {}
+                },
+                "ri": {
+                    "id": "synk-executor-device",
+                    "settings": {}
+                },
+                "sl": {
+                    "id": "synk-executor-device",
+                    "settings": {}
+                }
+            },
+            "registers": {
+                "x32": {
+                    "id": "registers-x32",
+                    "settings": {
+                        "xlen": 32,
+                        "zero-id": 0
+                    }
+                }
+            },
+            "forms": {
+                "b": { "id": "riscv-form-b", "settings": {"regs": "x32"} },
+                "i": { "id": "riscv-form-i", "settings": {"regs": "x32"} },
+                "j": { "id": "riscv-form-j", "settings": {"regs": "x32"} },
+                "r": { "id": "riscv-form-r", "settings": {"regs": "x32"} },
+                "s": { "id": "riscv-form-s", "settings": {"regs": "x32"} },
+                "u": { "id": "riscv-form-u", "settings": {"regs": "x32"} }
+            },
+            "functors": {
+                "iadd": { "id": "riscv-imm-add-functor-x32", "settings": {} },
+                "radd": { "id": "riscv-reg-add-functor-x32", "settings": {} },
+                "branch": { "id": "riscv-branch-functor-x32", "settings": {} },
+                "jalr": { "id": "riscv-jalr-functor-x32", "settings": {} },
+                "jump": { "id": "riscv-jump-functor-x32", "settings": {} },
+                "lui-auipc": {
+                    "id": "riscv-lui-auipc-functor-x32", "settings": {}
+                },
+                "store": {
+                    "id": "riscv-store-functor-x32", "settings": {"port": "sl"}
+                },
+                "load": {
+                    "id": "riscv-load-functor-x32", "settings": {"port": "sl"}
+                }
+            },
+            "instructions": [
+                {"opcode": 51,  "form": "r", "functor": "radd",      "executor": "ri"},
+                {"opcode": 19,  "form": "i", "functor": "iadd",      "executor": "ri"},
+                {"opcode": 99,  "form": "b", "functor": "branch",    "executor": "ctrl"},
+                {"opcode": 35,  "form": "s", "functor": "store",     "executor": "sl"},
+                {"opcode": 3,   "form": "i", "functor": "load",      "executor": "sl"},
+                {"opcode": 55,  "form": "u", "functor": "lui-auipc", "executor": "ctrl"},
+                {"opcode": 23,  "form": "u", "functor": "lui-auipc", "executor": "ctrl"},
+                {"opcode": 111, "form": "j", "functor": "jump",      "executor": "ctrl"},
+                {"opcode": 103, "form": "i", "functor": "jalr",      "executor": "ctrl"}
+            ]
+        }
+    },
+    "bus": {
+        "masters": {
+            "ctrl": {
+                "id": "cpu-gate-anypkt",
+                "slave": "main-switch",
+                "settings": {}
+            },
+            "sl": {
+                "id": "cpu-gate-anypkt",
+                "slave": "main-switch",
+                "settings": {}
+            }
+        },
+        "switches": {
+            "main-switch": {
+                "id": "switch-anypkt",
+                "default-slave": "main-swc-default-dev",
+                "slaves": [
+                    {"base": 8192, "size": 12, "slave": "uart-gate"},
+                    {"base": 16384, "size": 4096, "slave": "itcm-gate"},
+                    {"base": 32768, "size": 4096, "slave": "dtcm-gate"}
+                ],
+                "settings": {}
+            }
+        },
+        "bridges": {},
+        "default-devices": {
+            "main-swc-default-dev": {
+                "id": "default-device-anypkt-ipkt",
+                "settings": {}
+            }
+        },
+        "endpoints": {
+            "uart-gate": {
+                "id": "device-gate-anypkt",
+                "settings": {}
+            },
+            "itcm-gate": {
+                "id": "device-gate-anypkt",
+                "settings": {}
+            },
+            "dtcm-gate": {
+                "id": "device-gate-anypkt",
+                "settings": {}
+            }
+        }
+    },
+    "peripherals": {
+        "itcm": {
+            "id": "filetcm",
+            "gate": "itcm-gate",
+            "settings": {
+                "tcm_file": "prog/c_prog/build/test.bin",
+                "max_size": 4096
+            }
+        },
+        "dtcm": {
+            "id": "filetcm",
+            "gate": "dtcm-gate",
+            "settings": {
+                "tcm_file": "prog/c_prog/build/dtcm.bin",
+                "max_size": 4096
+            }
+        },
+        "uart": {
+            "id": "stdiouart",
+            "gate": "uart-gate",
+            "settings": {}
+        }
+    }
+}
