@@ -6,7 +6,7 @@ void JALRFunctor::handle_instruction(GenericInstruction &i) {
     rd.set_value(get_operation(i)(rs1.get_value(), i.get_immediate(), pc));
 }
 
-uint32_t jalr_op(uint32_t r1, int32_t imm, uint32_t &pc) {
+uint32_t jalr_op(uint32_t r1, int32_t imm, std::atomic_uint32_t &pc) {
     uint32_t res = pc + 4;
     pc = r1 + imm;
     return res;

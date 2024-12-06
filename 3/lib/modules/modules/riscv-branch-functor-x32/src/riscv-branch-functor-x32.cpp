@@ -6,27 +6,27 @@ void BFunctor::handle_instruction(GenericInstruction &i) {
     get_operation(i)(rs1.get_value(), rs2.get_value(), i.get_immediate(), pc);
 }
 
-void beq_op(uint32_t r1, uint32_t r2, int32_t imm, uint32_t &pc) {
+void beq_op(uint32_t r1, uint32_t r2, int32_t imm, std::atomic_uint32_t &pc) {
     pc = (r1 == r2 ? pc + imm : pc + 4);
 }
 
-void bne_op(uint32_t r1, uint32_t r2, int32_t imm, uint32_t &pc) {
+void bne_op(uint32_t r1, uint32_t r2, int32_t imm, std::atomic_uint32_t &pc) {
     pc = (r1 != r2 ? pc + imm : pc + 4);
 }
 
-void blt_op(uint32_t r1, uint32_t r2, int32_t imm, uint32_t &pc) {
+void blt_op(uint32_t r1, uint32_t r2, int32_t imm, std::atomic_uint32_t &pc) {
     pc = ((int32_t)r1 < (int32_t)r2 ? pc + imm : pc + 4);
 }
 
-void bltu_op(uint32_t r1, uint32_t r2, int32_t imm, uint32_t &pc) {
+void bltu_op(uint32_t r1, uint32_t r2, int32_t imm, std::atomic_uint32_t &pc) {
     pc = (r1 < r2 ? pc + imm : pc + 4);
 }
 
-void bge_op(uint32_t r1, uint32_t r2, int32_t imm, uint32_t &pc) {
+void bge_op(uint32_t r1, uint32_t r2, int32_t imm, std::atomic_uint32_t &pc) {
     pc = ((int32_t)r1 >= (int32_t)r2 ? pc + imm : pc + 4);
 }
 
-void bgeu_op(uint32_t r1, uint32_t r2, int32_t imm, uint32_t &pc) {
+void bgeu_op(uint32_t r1, uint32_t r2, int32_t imm, std::atomic_uint32_t &pc) {
     pc = (r1 >= r2 ? pc + imm : pc + 4);
 }
 

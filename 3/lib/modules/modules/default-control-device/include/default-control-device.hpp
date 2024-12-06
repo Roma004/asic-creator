@@ -21,14 +21,14 @@ class ControlDevice : public ControlDeviceInterface {
 
     bool is_completed() const noexcept override;
 
-    uint32_t &get_pc() noexcept override;
-    const uint32_t &get_pc() const noexcept override;
+    std::atomic_uint32_t &get_pc() noexcept override;
+    const std::atomic_uint32_t &get_pc() const noexcept override;
 
   private:
     ExecutorDeviceInterface &control_executor;
     InstructionRegistry &i_reg;
     DataMasterPortInterface &port;
-    uint32_t pc;
+    std::atomic_uint32_t pc;
     uint32_t prev_pc = 0;
 
     uint32_t load_instruction();

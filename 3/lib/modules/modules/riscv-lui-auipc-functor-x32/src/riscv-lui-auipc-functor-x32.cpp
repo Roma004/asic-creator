@@ -8,7 +8,7 @@ void UFunctor::handle_instruction(GenericInstruction &i) {
 // clang-format off
 
 inline const UFunctor::op_map_t UFunctor::ops{
-/* lui   */ { 0x00037, [](int32_t imm, uint32_t &pc) { return imm << 12;} },
-/* auipc */ { 0x00017, [](int32_t imm, uint32_t &pc) { return pc + (imm << 12); } },
+/* lui   */ { 0x00037, [](int32_t imm, std::atomic_uint32_t &pc) { return imm << 12;} },
+/* auipc */ { 0x00017, [](int32_t imm, std::atomic_uint32_t &pc) { return pc + (imm << 12); } },
 };
 

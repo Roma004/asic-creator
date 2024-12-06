@@ -7,7 +7,7 @@ void JFunctor::handle_instruction(GenericInstruction &i) {
 
 // clang-format off
 
-static inline uint32_t jal_op(int32_t imm, uint32_t &pc) {
+static inline uint32_t jal_op(int32_t imm, std::atomic_uint32_t &pc) {
     uint32_t res = pc + 4;
     pc += (int32_t)imm;
     return res;

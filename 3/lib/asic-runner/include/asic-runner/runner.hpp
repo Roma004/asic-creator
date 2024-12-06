@@ -1,13 +1,17 @@
 #pragma once
 
 #include "asic-runner/loader.hpp"
-#include <memory>
-#include <thread>
+#include <future>
 #include <vector>
 
 class ASICRunner {
   public:
     ASICRunner(ASICLoader &loader);
+    ASICRunner(const ASICLoader &) = delete;
+    ASICRunner(ASICLoader &&) = delete;
+
+    ASICRunner &operator=(const ASICRunner &) = delete;
+    ASICRunner &operator=(ASICRunner &&) = delete;
 
     void run();
 
@@ -21,7 +25,6 @@ class ASICRunner {
     void run_peripherals();
 
     ASICLoader &loader;
-    std::vector<std::unique_ptr<std::thread>> threads;
-    bool stop;
-    std::string stop_reason;
+    std::vector<std::future<void>> results;
+    std::atomic_bool stop;
 };

@@ -19,6 +19,7 @@ Receiver &DefaultDevice::get_receiver() noexcept { return gate.get_receiver(); }
 void DefaultDevice::transfer() {
     std::shared_ptr<PacketInterface> pkt;
     if (gate.recv_request_pkt(pkt)) {
+        if (pkt->get_type() == WRITE) return;
         auto oops_pkt = std::make_shared<InterconectPacket>(
             *pkt, std::make_shared<OOPSData>()
         );

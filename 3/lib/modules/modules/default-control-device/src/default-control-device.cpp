@@ -4,6 +4,7 @@
 #include <asic-engine/cpu/base-instruction.hpp>
 #include <asic-engine/cpu/registries/instruction-registry.hpp>
 #include <asic-engine/handler-device.hpp>
+#include <cstdint>
 #include <logger/logger.hpp>
 
 ControlDevice::ControlDevice(
@@ -26,12 +27,15 @@ void ControlDevice::handle() {
 
 bool ControlDevice::is_completed() const noexcept { return pc == 0; }
 
-uint32_t &ControlDevice::get_pc() noexcept { return pc; }
-const uint32_t &ControlDevice::get_pc() const noexcept { return pc; }
+std::atomic_uint32_t &ControlDevice::get_pc() noexcept { return pc; }
+const std::atomic_uint32_t &ControlDevice::get_pc() const noexcept {
+    return pc;
+}
 
 uint32_t ControlDevice::load_instruction() {
     uint32_t res = port.read32(pc);
-    debug.write("cpu got instruction `{:x}` at {:x}", res, pc);
+    uint32_t pc_val = pc;
+    debug.write("cpu got instruction `{:x}` at {:x}", res, pc_val);
     return res;
 }
 

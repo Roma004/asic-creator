@@ -1,4 +1,5 @@
 #pragma once
+#include <atomic>
 #include <cstdint>
 #include <asic-engine/handler-device.hpp>
 
@@ -15,7 +16,7 @@ class ControlDeviceInterface : public HandlerDevice {
   public:
     virtual ~ControlDeviceInterface() {};
     /** @brief Получить счётчик команд */
-    virtual uint32_t &get_pc() noexcept = 0;
-    virtual const uint32_t &get_pc() const noexcept = 0;
+    virtual std::atomic_uint32_t &get_pc() noexcept = 0;
+    virtual const std::atomic_uint32_t &get_pc() const noexcept = 0;
     virtual bool is_completed() const noexcept = 0;
 };
