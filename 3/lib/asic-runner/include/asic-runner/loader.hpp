@@ -1,5 +1,5 @@
 #pragma once
-#include "asic-engine/asic/configs.hpp"
+#include "asic-runner/configs.hpp"
 #include "asic-engine/cpu/abstracts/control-device.hpp"
 #include "asic-engine/cpu/abstracts/data-master-port.hpp"
 #include "asic-engine/cpu/abstracts/executor-device.hpp"

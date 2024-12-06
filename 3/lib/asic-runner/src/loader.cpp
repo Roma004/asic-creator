@@ -21,9 +21,9 @@
 #include "asic-engine/peripheral/modules/peripheral-module.hpp"
 #include "mod-loader/library-manger.hpp"
 #include "mod-loader/module-manager.hpp"
-#include <asic-engine/asic/configs.hpp>
-#include <asic-engine/asic/loader.hpp>
-#include <asic-engine/asic/util.hpp>
+#include <asic-runner/configs.hpp>
+#include <asic-runner/loader.hpp>
+#include <asic-runner/util.hpp>
 #include <asic-engine/cpu/registries/cpu-context.hpp>
 #include <asic-engine/data-master/bus-context.hpp>
 #include <asic-engine/data-master/modules/bridge-module.hpp>

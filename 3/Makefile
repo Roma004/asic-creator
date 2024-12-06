@@ -11,7 +11,7 @@ cmake:
 	(pushd $(BUILD_DIR) && cmake .. -DTESTING=ON -DDOXYGEN=ON -DRVPROC=ON && popd)
 
 proc-build: cmake
-	$(MAKE) -C $(BUILD_DIR) proc
+	$(MAKE) -C $(BUILD_DIR) -j8 proc
 
 proc-run:
 	$(BUILD_DIR)/proc
@@ -19,7 +19,7 @@ proc-run:
 proc: proc-build proc-run
 
 lab-build:
-	$(MAKE) -C $(BUILD_DIR)
+	$(MAKE) -C $(BUILD_DIR) -j8
 
 lab-run:
 	$(VALGRIND) $(EXEC_NAME)

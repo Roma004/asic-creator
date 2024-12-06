@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.10)
 
 project(lab1 VERSION 0.0.1 LANGUAGES CXX)
 
-add_definitions("-ggdb3 -O0 -std=c++23")
+add_definitions("-ggdb3 -O0 -std=c++23 -fsanitize=thread")
+add_link_options("-fsanitize=thread")
 
 include_directories(lib/include)
 include_directories(lib/thread-safe-containers)
@@ -23,16 +24,14 @@ if (RVPROC)
     add_executable(proc ${SRC_FILES})
     target_include_directories(proc PUBLIC prog/include)
     target_include_directories(proc PUBLIC lib/asic-engine/include)
+    target_include_directories(proc PUBLIC lib/asic-runner/include)
     target_include_directories(proc PUBLIC lib/logger/include)
     target_include_directories(proc PUBLIC lib/mod-loader/include)
     # TODO foreach
     target_include_directories(proc PUBLIC lib/modules/common/include)
-    target_include_directories(proc PUBLIC lib/modules/modules/default-control-device/include)
-    target_include_directories(proc PUBLIC lib/modules/modules/switch-anypkt/include)
-    target_include_directories(proc PUBLIC lib/modules/modules/default-device-anypkt-ipkt/include)
-    target_include_directories(proc PUBLIC lib/modules/modules/port-rw1248i-ipkt/include)
     target_link_libraries(proc PRIVATE nlohmann_json::nlohmann_json)
     target_link_libraries(proc PUBLIC asic-engine)
+    target_link_libraries(proc PUBLIC asic-runner)
     target_link_libraries(proc PUBLIC mod-loader)
     target_link_libraries(proc PUBLIC roma004-logger)
     target_link_libraries(proc PUBLIC modules-common)
@@ -67,26 +66,29 @@ endif (DOXYGEN)
 #         tests/test_cpu_registers_set.cpp
 #         tests/test_cpu_register_request.cpp
 #         tests/test_cpu_register_request_manager.cpp
-#         tests/test_cpu_default_executor_device.cpp
-#         tests/test_cpu_data_master_port.cpp
+#         # tests/test_cpu_default_executor_device.cpp
+#         # tests/test_cpu_data_master_port.cpp
 #         tests/test_dm_switch_context.cpp
 #         tests/test_dm_interconnect_packet.cpp
 #         tests/test_dm_packet_queue.cpp
 #         tests/test_dm_packet_receiver.cpp
 #         tests/test_dm_packet_sender.cpp
 #         tests/test_dm_device_gate.cpp
-#         tests/test_dm_cpu_gate.cpp
-#         tests/test_dm_default_device.cpp
-#         tests/test_dm_switch.cpp
+#         # tests/test_dm_cpu_gate.cpp
+#         # tests/test_dm_default_device.cpp
+#         # tests/test_dm_switch.cpp
 #     )
 # 
 #     set (ALL_TESTS all_tests)
 # 
 #     add_executable(${ALL_TESTS} ${TEST_FILES} ${SRC_FILES})
 #     target_compile_options(${ALL_TESTS} PUBLIC "--coverage")
+#     target_include_directories(${ALL_TESTS} PUBLIC lib/asic-engine/include)
+#     target_include_directories(${ALL_TESTS} PUBLIC lib/modules/common/include)
 #     target_link_libraries(${ALL_TESTS} PRIVATE
 #                           gcov
-#                           cpu-engine_gcov
+#                           asic-engine_gcov
+#                           modules-common_gcov
 #                           Catch2::Catch2WithMain)
 #     add_test(NAME ${ALL_TESTS} COMMAND ${ALL_TESTS})
 # endif (TESTING)

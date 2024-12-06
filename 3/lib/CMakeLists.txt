@@ -3,10 +3,12 @@ cmake_minimum_required(VERSION 3.10)
 project(lib)
 
 include_directories(asic-engine/include)
+include_directories(asic-runner/include)
 include_directories(mod-loader/include)
 include_directories(logger/include)
 
 add_subdirectory(asic-engine)
+add_subdirectory(asic-runner)
 add_subdirectory(mod-loader)
 add_subdirectory(logger)
 
