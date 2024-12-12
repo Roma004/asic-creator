@@ -1,8 +1,8 @@
-#include "data-master/abstracts/abstract-packet.hpp"
+#include "asic-engine/data-master/abstracts/packet.hpp"
 #include <catch2/catch_message.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <data-master/common.hpp>
-#include <data-master/engine/interconect-packet.hpp>
+#include <asic-engine/data-master/common.hpp>
+#include <modules-common/interconect-packet.hpp>
 #include "lib/test-packet-data.hpp"
 #include <memory>
 

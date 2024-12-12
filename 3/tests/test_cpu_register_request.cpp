@@ -3,8 +3,8 @@
 #include <catch2/internal/catch_section.hpp>
 #include <catch2/matchers/catch_matchers_contains.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
-#include <cpu/register-set.hpp>
-#include <cpu/register-request.hpp>
+#include <asic-engine/cpu/register-set.hpp>
+#include <asic-engine/cpu/register-request.hpp>
 #include "lib/test-instruction-form.hpp"
 #include "lib/test-register-block.hpp"
 

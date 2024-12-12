@@ -1,12 +1,12 @@
-#include "data-master/abstracts/abstract-packet.hpp"
+#include "asic-engine/data-master/abstracts/packet.hpp"
+#include "asic-engine/data-master/packet-queue.hpp"
+#include "lib/test-packet-data.hpp"
+#include "modules-common/device-gate.hpp"
+#include <asic-engine/data-master/common.hpp>
 #include <catch2/catch_message.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <data-master/common.hpp>
-#include <data-master/engine/interconect-packet.hpp>
-#include "data-master/engine/device-gate.hpp"
-#include "data-master/packet-queue.hpp"
-#include "lib/test-packet-data.hpp"
 #include <memory>
+#include <modules-common/interconect-packet.hpp>
 
 TEST_CASE("Working with DeviceGate", "[dm][device_gate]") {
     std::mutex m;
@@ -21,7 +21,7 @@ TEST_CASE("Working with DeviceGate", "[dm][device_gate]") {
 
         gate.get_receiver().send(pkt1);
 
-        std::shared_ptr<AbstractPacket> tmp_pkt;
+        std::shared_ptr<PacketInterface> tmp_pkt;
         REQUIRE(gate.recv_request_pkt(tmp_pkt));
         REQUIRE(test_packet_data_counter == 1);
         REQUIRE(*tmp_pkt == *pkt1);
@@ -33,7 +33,7 @@ TEST_CASE("Working with DeviceGate", "[dm][device_gate]") {
 
         gate.send_response_pkt(pkt1);
 
-        std::shared_ptr<AbstractPacket> tmp_pkt;
+        std::shared_ptr<PacketInterface> tmp_pkt;
         auto is_write = [](auto pkt) { return pkt->get_type() == WRITE; };
         auto is_read = [](auto pkt) { return pkt->get_type() == READ; };
 

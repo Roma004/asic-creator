@@ -1,6 +1,6 @@
 #include <catch2/catch_message.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <cpu/base-instruction.hpp>
+#include <asic-engine/cpu/base-instruction.hpp>
 #include <cstdint>
 
 TEST_CASE("Working with BaseInstruction", "[cpu, base_instruction]") {

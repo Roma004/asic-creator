@@ -1,11 +1,10 @@
+#include "lib/test-instruction-form.hpp"
+#include <asic-engine/cpu/register-set.hpp>
 #include <catch2/catch_message.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/internal/catch_section.hpp>
 #include <catch2/matchers/catch_matchers_contains.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
-#include <cpu/register-set.hpp>
-#include "lib/test-instruction-form.hpp"
-
 
 TEST_CASE("Register set functionality", "[cpu][register_set]") {
     using namespace Catch::Matchers;

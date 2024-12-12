@@ -1,10 +1,9 @@
-#include "data-master/abstracts/abstract-packet.hpp"
 #include <catch2/catch_message.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <data-master/common.hpp>
-#include <data-master/engine/interconect-packet.hpp>
-#include "data-master/engine/packet-receiver.hpp"
-#include "data-master/packet-queue.hpp"
+#include <asic-engine/data-master/common.hpp>
+#include <modules-common/interconect-packet.hpp>
+#include "modules-common/packet-receiver.hpp"
+#include "asic-engine/data-master/packet-queue.hpp"
 #include "lib/test-packet-data.hpp"
 #include <memory>
 

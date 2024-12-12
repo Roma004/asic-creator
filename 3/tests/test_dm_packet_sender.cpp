@@ -1,12 +1,12 @@
+#include "asic-engine/data-master/abstracts/packet.hpp"
+#include "modules-common/packet-sender.hpp"
+#include "asic-engine/data-master/packet-queue.hpp"
+#include "lib/test-packet-data.hpp"
+#include <asic-engine/data-master/common.hpp>
 #include <catch2/catch_message.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <data-master/common.hpp>
-#include <data-master/engine/interconect-packet.hpp>
-#include "data-master/abstracts/abstract-packet.hpp"
-#include "data-master/engine/packet-sender.hpp"
-#include "data-master/packet-queue.hpp"
-#include "lib/test-packet-data.hpp"
 #include <memory>
+#include <modules-common/interconect-packet.hpp>
 
 TEST_CASE("Working with PacketSender", "[dm][packet_sender]") {
     std::mutex m;
@@ -22,7 +22,7 @@ TEST_CASE("Working with PacketSender", "[dm][packet_sender]") {
         q.push(pkt1);
         q.push(pkt2);
 
-        std::shared_ptr<AbstractPacket> tmp_pkt;
+        std::shared_ptr<PacketInterface> tmp_pkt;
 
         SECTION("Receive everything") {
             REQUIRE(r.recv(tmp_pkt));

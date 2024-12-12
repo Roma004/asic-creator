@@ -1,7 +1,7 @@
-#include <data-master/common.hpp>
+#include <asic-engine/data-master/common.hpp>
 #include <catch2/catch_message.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <data-master/switch-context.hpp>
+#include <asic-engine/data-master/switch-context.hpp>
 
 TEST_CASE("Working with SwitchContext", "[dm][switch_context]") {
     SwitchContext ctx;

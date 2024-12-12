@@ -1,10 +1,10 @@
-#include "data-master/abstracts/abstract-packet.hpp"
-#include "data-master/packet-queue.hpp"
+#include "asic-engine/data-master/abstracts/packet.hpp"
+#include "asic-engine/data-master/packet-queue.hpp"
 #include "lib/test-packet-data.hpp"
 #include <catch2/catch_message.hpp>
 #include <catch2/catch_test_macros.hpp>
-#include <data-master/common.hpp>
-#include <data-master/engine/interconect-packet.hpp>
+#include <asic-engine/data-master/common.hpp>
+#include <modules-common/interconect-packet.hpp>
 #include <memory>
 
 TEST_CASE("Working with PacketQueue", "[dm][packet_queue]") {
@@ -22,8 +22,8 @@ TEST_CASE("Working with PacketQueue", "[dm][packet_queue]") {
 
         REQUIRE(q.empty());
 
-        const std::shared_ptr<AbstractPacket> &pkt_ref1 = pkt_ptr1;
-        const std::shared_ptr<AbstractPacket> &pkt_ref2 = pkt_ptr2;
+        const std::shared_ptr<PacketInterface> &pkt_ref1 = pkt_ptr1;
+        const std::shared_ptr<PacketInterface> &pkt_ref2 = pkt_ptr2;
 
         q.push(pkt_ref1);
 
@@ -108,7 +108,7 @@ TEST_CASE("Working with PacketQueue", "[dm][packet_queue]") {
 
         REQUIRE(q.front()->get_data() == *data1);
 
-        std::shared_ptr<AbstractPacket> tmp_pkt;
+        std::shared_ptr<PacketInterface> tmp_pkt;
         q.pop(tmp_pkt);
 
         REQUIRE(tmp_pkt->get_data() == *data1);
@@ -131,7 +131,7 @@ TEST_CASE("Working with PacketQueue", "[dm][packet_queue]") {
 
         auto is_write_pkt = [](auto pkt) { return pkt->get_type() == WRITE; };
         auto is_read_pkt = [](auto pkt) { return pkt->get_type() == READ; };
-        std::shared_ptr<AbstractPacket> tmp_pkt;
+        std::shared_ptr<PacketInterface> tmp_pkt;
 
         SECTION("pop_if WRITE for front = WRITE (succussfull pop)") {
             q.push(std::move(pkt_ptr1));

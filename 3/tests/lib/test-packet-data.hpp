@@ -1,14 +1,14 @@
 #pragma once
 #include <cstddef>
 #include <cstdint>
-#include <data-master/abstracts/abstract-packet.hpp>
-#include <data-master/common.hpp>
-#include <data-master/engine/interconect-packet.hpp>
+#include <asic-engine/data-master/abstracts/packet.hpp>
+#include <asic-engine/data-master/common.hpp>
+#include <modules-common/interconect-packet.hpp>
 #include <memory>
 
 inline int test_packet_data_counter = 0;
 
-class TestPacketData : public AbstractPacket::PacketData {
+class TestPacketData : public PacketDataInterface {
   public:
     constexpr const static std::string pkt_type = "test";
     uint32_t data;
@@ -32,7 +32,7 @@ class TestPacketData : public AbstractPacket::PacketData {
         return pkt_type;
     }
 
-    bool operator==(const PacketData &o) const noexcept override {
+    bool operator==(const PacketDataInterface &o) const noexcept override {
         if (o.type_id() != pkt_type) return false;
         auto pkt = dynamic_cast<const TestPacketData &>(o);
         return data == pkt.data;
@@ -49,7 +49,7 @@ static inline std::
 
 static inline std::
     pair<std::shared_ptr<InterconectPacket>, std::shared_ptr<TestPacketData>>
-    make_packet(std::shared_ptr<AbstractPacket> old_pkt, uint32_t data) {
+    make_packet(std::shared_ptr<PacketInterface> old_pkt, uint32_t data) {
     auto data_ptr = std::make_shared<TestPacketData>(data);
     auto pkt = std::make_shared<InterconectPacket>(*old_pkt, data_ptr);
     return {pkt, data_ptr};

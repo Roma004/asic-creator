@@ -1,6 +1,8 @@
-#include "cpu/base-instruction.hpp"
-#include "cpu/generic-instruction.hpp"
-#include "cpu/register-request-manager.hpp"
+#include "asic-engine/cpu/base-instruction.hpp"
+#include "asic-engine/cpu/generic-instruction.hpp"
+#include "asic-engine/cpu/register-request-manager.hpp"
+#include "asic-engine/cpu/register-request.hpp"
+#include "asic-engine/cpu/register-set.hpp"
 #include "lib/test-instruction-form.hpp"
 #include "lib/test-register-block.hpp"
 #include <catch2/catch_message.hpp>
@@ -9,15 +11,15 @@
 #include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_contains.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
-#include <cpu/register-request.hpp>
-#include <cpu/register-set.hpp>
 #include <cstdint>
+#include <mutex>
 
 TEST_CASE("Generic Instruction functionality", "[cpu][generic_instruction]") {
+    std::mutex m;
     using namespace Catch::Matchers;
     TestRegisterBlock regs_rd(32);
     TestRegisterBlock regs_rs(32);
-    RegisterRequestsManager req_manager;
+    RegisterRequestsManager req_manager(m);
 
     SECTION("GenericInstruction with InstructionFormTest") {
         InstructionFormTest form(regs_rd, regs_rs);

@@ -1,8 +1,8 @@
 #pragma once
-#include "cpu/abstracts/registers.hpp"
-#include "cpu/base-instruction.hpp"
+#include "asic-engine/cpu/abstracts/registers.hpp"
+#include "asic-engine/cpu/base-instruction.hpp"
 #include "test-register-block.hpp"
-#include <cpu/abstracts/instruction-form.hpp>
+#include <asic-engine/cpu/abstracts/instruction-form.hpp>
 #include <cstdint>
 #include <initializer_list>
 #include <memory>

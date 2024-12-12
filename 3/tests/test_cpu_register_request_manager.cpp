@@ -1,4 +1,4 @@
-#include "cpu/register-request-manager.hpp"
+#include "asic-engine/cpu/register-request-manager.hpp"
 #include "lib/test-instruction-form.hpp"
 #include "lib/test-register-block.hpp"
 #include <catch2/catch_message.hpp>
@@ -6,12 +6,14 @@
 #include <catch2/internal/catch_section.hpp>
 #include <catch2/matchers/catch_matchers_contains.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
-#include <cpu/register-request.hpp>
-#include <cpu/register-set.hpp>
+#include <asic-engine/cpu/register-request.hpp>
+#include <asic-engine/cpu/register-set.hpp>
+#include <mutex>
 
 TEST_CASE(
     "Register request manager functionality", "[cpu][register_request_manager]"
 ) {
+    std::mutex m;
     using namespace Catch::Matchers;
     // having test register block
     TestRegisterBlock regs_x32(32);
@@ -19,7 +21,7 @@ TEST_CASE(
 
     InstructionFormMock formA(1, {2, 1, 6}, regs_x32);
 
-    RegisterRequestsManager req_manager;
+    RegisterRequestsManager req_manager(m);
 
     SECTION("Single request process") {
         RegisterSet set_a = formA.get_registers(0);
