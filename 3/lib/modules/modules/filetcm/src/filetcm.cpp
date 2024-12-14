@@ -81,15 +81,16 @@ void FileTcm::handle_read(std::shared_ptr<PacketInterface> pkt) {
 }
 
 void FileTcm::handle() {
-    std::shared_ptr<PacketInterface> pkt;
-    if (!gate.recv_request_pkt(pkt)) return;
-    debug.write(
-        "tcm got request packet: {}, {:x}",
-        (pkt->get_type() == READ ? "READ" : "WRITE"),
-        pkt->get_addr()
-    );
+    if (auto opt = gate.recv_request_pkt()) {
+        auto pkt = opt.value();
+        debug.write(
+            "tcm got request packet: {}, {:x}",
+            (pkt->get_type() == READ ? "READ" : "WRITE"),
+            pkt->get_addr()
+        );
 
-    if (pkt->get_type() == WRITE) handle_write(pkt);
-    else if (pkt->get_type() == READ) handle_read(pkt);
+        if (pkt->get_type() == WRITE) handle_write(pkt);
+        else if (pkt->get_type() == READ) handle_read(pkt);
+    }
 }
 

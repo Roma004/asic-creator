@@ -46,7 +46,8 @@ class EndpointInterface : public SlaveInterface {
      *   true -- если извлечение пакета успешно
      *   false -- если не успешно
      * */
-    virtual bool recv_request_pkt(std::shared_ptr<PacketInterface> &pkt) = 0;
+    virtual std::optional<std::shared_ptr<PacketInterface>>
+    recv_request_pkt() = 0;
 };
 
 /**
@@ -67,7 +68,8 @@ class RootInterface {
      *   true -- если извлечение пакета успешно
      *   false -- если не успешно
      * */
-    virtual bool recv_response_pkt(std::shared_ptr<PacketInterface> &pkt) = 0;
+    virtual std::optional<std::shared_ptr<PacketInterface>>
+    recv_response_pkt() = 0;
 };
 
 /**

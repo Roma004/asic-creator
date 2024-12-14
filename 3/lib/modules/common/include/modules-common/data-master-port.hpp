@@ -6,6 +6,7 @@
 #include <asic-engine/exceptions.hpp>
 #include <cstdint>
 #include <logger/logger.hpp>
+#include <memory>
 #include <modules-common/interconect-packet.hpp>
 #include <modules-common/packet-data.hpp>
 #include <type_traits>
@@ -27,8 +28,10 @@ class DataMasterPort : public DataMasterPortInterface {
         debug.write("port sends read pkt {:x}", addr);
 
         gate.send_request_pkt(std::move(pkt));
-        std::shared_ptr<PacketInterface> resp;
-        while (!gate.recv_response_pkt(resp));
+
+        std::optional<std::shared_ptr<PacketInterface>> opt;
+        while (!(opt = gate.recv_response_pkt()));
+        std::shared_ptr<PacketInterface> resp = opt.value();
 
         try {
             pkt = std::dynamic_pointer_cast<InterconectPacket>(resp);

@@ -75,9 +75,10 @@ void StreamUART::handle_read(std::shared_ptr<PacketInterface> pkt) {
 }
 
 void StreamUART::handle() {
-    std::shared_ptr<PacketInterface> pkt;
-    if (!gate.recv_request_pkt(pkt)) return;
+    std::optional<std::shared_ptr<PacketInterface>> pkt_opt;
+    if (!(pkt_opt = gate.recv_request_pkt())) return;
 
+    auto pkt = pkt_opt.value();
     if (pkt->get_type() == WRITE) handle_write(pkt);
     else if (pkt->get_type() == READ) handle_read(pkt);
 }

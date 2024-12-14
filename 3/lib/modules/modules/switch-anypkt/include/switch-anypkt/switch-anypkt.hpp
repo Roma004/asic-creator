@@ -1,15 +1,15 @@
 #pragma once
-#include <cstdint>
-#include <asic-engine/data-master/abstracts/packet.hpp>
 #include <asic-engine/data-master/abstracts/connectors.hpp>
 #include <asic-engine/data-master/abstracts/endpoints.hpp>
+#include <asic-engine/data-master/abstracts/packet.hpp>
 #include <asic-engine/data-master/abstracts/transfer-interface.hpp>
 #include <asic-engine/data-master/common.hpp>
-#include <modules-common/device-gate.hpp>
 #include <asic-engine/data-master/packet-queue.hpp>
+#include <cstdint>
 #include <functional>
 #include <initializer_list>
 #include <memory>
+#include <modules-common/device-gate.hpp>
 #include <vector>
 
 class Switch : public SwitchInterface {
@@ -45,8 +45,8 @@ class Switch : public SwitchInterface {
 
     void handle_range(const range &rng) noexcept;
 
-    bool
-    try_extract_pkt(SlaveInterface &slv, std::shared_ptr<PacketInterface> &pkt);
+    std::optional<std::shared_ptr<PacketInterface>>
+    try_extract_pkt(SlaveInterface &slv);
 
     void transfer_pkt_to_master(
         std::shared_ptr<PacketInterface> pkt, addr_t addr_ext
@@ -55,5 +55,4 @@ class Switch : public SwitchInterface {
     std::vector<range>::const_iterator
     get_range(std::shared_ptr<PacketInterface> pkt) const noexcept;
 };
-
 

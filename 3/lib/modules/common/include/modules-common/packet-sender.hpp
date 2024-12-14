@@ -10,8 +10,8 @@ class PacketSender : public Sender {
 
     static bool always(std::shared_ptr<PacketInterface> pkt);
 
-    bool recv(std::shared_ptr<PacketInterface> &pkt, cond_t recv_if = always)
-        override;
+    std::optional<std::shared_ptr<PacketInterface>>
+    recv(cond_t recv_if = always) override;
 
   private:
     PacketQueue &q;

@@ -34,6 +34,6 @@ class Sender {
      *   будет принят
      * @param[recv_if] условие извлечения пакета из интерфейса.
      * */
-    virtual bool
-    recv(std::shared_ptr<PacketInterface> &pkt, cond_t recv_if) = 0;
+    virtual std::optional<std::shared_ptr<PacketInterface>> recv(cond_t recv_if
+    ) = 0;
 };

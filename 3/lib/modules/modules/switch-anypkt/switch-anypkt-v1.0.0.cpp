@@ -17,12 +17,9 @@ class SwitchAnyPktModule : public SwitchModule {
     std::unique_ptr<SwitchInterface> make_switch(
         uint8_t switch_id, SlaveInterface &default_slave, ModuleSettings &stt
     ) const override {
-        static Factory<std::mutex> mut_f;
         static Factory<PacketQueue> q_f;
-        std::mutex &in_m = mut_f.make();
-        std::mutex &out_m = mut_f.make();
-        PacketQueue &in_q = q_f.make(in_m);
-        PacketQueue &out_q = q_f.make(out_m);
+        PacketQueue &in_q = q_f.make();
+        PacketQueue &out_q = q_f.make();
         return std::make_unique<Switch>(switch_id, in_q, out_q, default_slave);
     }
 };

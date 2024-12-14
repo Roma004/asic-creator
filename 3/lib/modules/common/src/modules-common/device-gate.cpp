@@ -18,6 +18,6 @@ void DeviceGate::send_response_pkt(std::shared_ptr<PacketInterface> pkt) {
     receiver_inner.send(pkt);
 }
 
-bool DeviceGate::recv_request_pkt(std::shared_ptr<PacketInterface> &pkt) {
-    return sender_inner.recv(pkt);
+std::optional<std::shared_ptr<PacketInterface>> DeviceGate::recv_request_pkt() {
+    return sender_inner.recv();
 }

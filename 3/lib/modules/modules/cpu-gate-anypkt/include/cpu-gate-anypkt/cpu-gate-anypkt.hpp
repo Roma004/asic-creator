@@ -16,8 +16,8 @@ class CPUGate : public RootInterface {
     void send_request_pkt(std::shared_ptr<PacketInterface> pkt
     ) noexcept override;
 
-    bool recv_response_pkt(std::shared_ptr<PacketInterface> &pkt
-    ) noexcept override;
+    std::optional<std::shared_ptr<PacketInterface>>
+    recv_response_pkt() noexcept override;
 
   private:
     addr_t address;

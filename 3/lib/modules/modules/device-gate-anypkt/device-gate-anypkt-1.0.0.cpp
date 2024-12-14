@@ -17,10 +17,9 @@ class DiviceGateAnyPktModule : public DeviceGateModule {
 
     std::unique_ptr<EndpointInterface> make_device_gate(ModuleSettings &stt
     ) const override {
-        static Factory<std::mutex> mf;
         static Factory<PacketQueue> qf;
-        auto &in_q = qf.make(mf.make());
-        auto &out_q = qf.make(mf.make());
+        auto &in_q = qf.make();
+        auto &out_q = qf.make();
         return std::make_unique<DeviceGate>(in_q, out_q);
     }
 };

@@ -25,8 +25,8 @@ Sender &Switch::get_sender() noexcept { return gate.get_sender(); }
 
 // TODO do something with bad address got from slave
 void Switch::transfer() {
-    std::shared_ptr<PacketInterface> pkt;
-    if (gate.recv_request_pkt(pkt)) {
+    if (auto opt = gate.recv_request_pkt()) {
+        auto pkt = opt.value();
         auto it = get_range(pkt);
         pkt->get_switch_context().push_switch(swc_id);
         if (it == slaves.end()
@@ -38,7 +38,8 @@ void Switch::transfer() {
         }
     }
     for (auto &rng : slaves) handle_range(rng);
-    if (try_extract_pkt(default_slave, pkt)) transfer_pkt_to_master(pkt, 0);
+    if (auto opt = try_extract_pkt(default_slave))
+        transfer_pkt_to_master(opt.value(), 0);
 };
 
 void Switch::connect_slaves(
@@ -95,20 +96,15 @@ void Switch::connect_slave(AddrRange rng, SlaveInterface &slv) {
 }
 
 void Switch::handle_range(const range &rng) noexcept {
-    std::shared_ptr<PacketInterface> pkt;
-    if (!try_extract_pkt(rng.slv.get(), pkt)) return;
-    transfer_pkt_to_master(pkt, rng.rng.addr);
+    if (auto opt = try_extract_pkt(rng.slv.get()))
+        transfer_pkt_to_master(opt.value(), rng.rng.addr);
 }
 
-bool Switch::try_extract_pkt(
-    SlaveInterface &slv, std::shared_ptr<PacketInterface> &pkt
-) {
-    return slv.get_sender().recv(
-        pkt,
-        [this](std::shared_ptr<PacketInterface> pkt) {
-            return pkt->get_switch_context().get_top_id() == swc_id;
-        }
-    );
+std::optional<std::shared_ptr<PacketInterface>>
+Switch::try_extract_pkt(SlaveInterface &slv) {
+    return slv.get_sender().recv([this](std::shared_ptr<PacketInterface> pkt) {
+        return pkt->get_switch_context().get_top_id() == swc_id;
+    });
 }
 
 void Switch::transfer_pkt_to_master(

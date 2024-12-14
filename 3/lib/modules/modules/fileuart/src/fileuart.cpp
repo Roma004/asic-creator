@@ -54,9 +54,9 @@ void FileUART::handle_read(std::shared_ptr<PacketInterface> pkt) {
 }
 
 void FileUART::handle() {
-    std::shared_ptr<PacketInterface> pkt;
-    if (!gate.recv_request_pkt(pkt)) return;
-
-    if (pkt->get_type() == WRITE) handle_write(pkt);
-    else if (pkt->get_type() == READ) handle_read(pkt);
+    if (auto opt = gate.recv_request_pkt()) {
+        auto pkt = opt.value();
+        if (pkt->get_type() == WRITE) handle_write(pkt);
+        else if (pkt->get_type() == READ) handle_read(pkt);
+    }
 }

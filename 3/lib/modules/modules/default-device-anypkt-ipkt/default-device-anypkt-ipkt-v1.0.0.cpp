@@ -18,12 +18,9 @@ class DefaultDeviceAnyPktIPktModule : public DefaultDeviceModule {
 
     std::unique_ptr<DefaultDeviceInterface>
     make_default_device(ModuleSettings &stt) const override {
-        static Factory<std::mutex> mut_f;
         static Factory<PacketQueue> q_f;
-        std::mutex &in_m = mut_f.make();
-        std::mutex &out_m = mut_f.make();
-        PacketQueue &in_q = q_f.make(in_m);
-        PacketQueue &out_q = q_f.make(out_m);
+        PacketQueue &in_q = q_f.make();
+        PacketQueue &out_q = q_f.make();
         return std::make_unique<DefaultDevice>(in_q, out_q);
     }
 };

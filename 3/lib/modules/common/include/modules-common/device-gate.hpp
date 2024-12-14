@@ -16,7 +16,7 @@ class DeviceGate : public EndpointInterface {
 
     void send_response_pkt(std::shared_ptr<PacketInterface> pkt) override;
 
-    bool recv_request_pkt(std::shared_ptr<PacketInterface> &pkt) override;
+    std::optional<std::shared_ptr<PacketInterface>> recv_request_pkt() override;
 
   private:
     PacketSender sender;

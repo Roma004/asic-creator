@@ -9,6 +9,7 @@
 #include <modules-common/interconect-packet.hpp>
 #include <modules-common/packet-receiver.hpp>
 #include <modules-common/packet-sender.hpp>
+#include <optional>
 
 DefaultDevice::DefaultDevice(PacketQueue &in_q, PacketQueue &out_q) :
     gate(in_q, out_q) {}
@@ -17,8 +18,8 @@ Sender &DefaultDevice::get_sender() noexcept { return gate.get_sender(); }
 Receiver &DefaultDevice::get_receiver() noexcept { return gate.get_receiver(); }
 
 void DefaultDevice::transfer() {
-    std::shared_ptr<PacketInterface> pkt;
-    if (gate.recv_request_pkt(pkt)) {
+    if (auto opt = gate.recv_request_pkt()) {
+        auto pkt = opt.value();
         if (pkt->get_type() == WRITE) return;
         auto oops_pkt = std::make_shared<InterconectPacket>(
             *pkt, std::make_shared<OOPSData>()
