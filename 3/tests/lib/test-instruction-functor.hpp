@@ -1,7 +1,7 @@
 #pragma once
 
-#include "cpu/abstracts/instruction-functor.hpp"
-#include "cpu/generic-instruction.hpp"
+#include "asic-engine/cpu/abstracts/instruction-functor.hpp"
+#include "asic-engine/cpu/generic-instruction.hpp"
 #include "test-register-block.hpp"
 #include <stdexcept>
 

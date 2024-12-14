@@ -23,7 +23,7 @@ class GenericInstruction {
         const InstructionForm &form, BaseInstruction instruction
     );
     GenericInstruction(const GenericInstruction &) = delete;
-    GenericInstruction(GenericInstruction &&);
+    GenericInstruction(GenericInstruction &&) noexcept;
 
     /** @brief Получить обект формата запроса */
     const InstructionForm &get_form() const noexcept;

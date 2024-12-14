@@ -12,7 +12,7 @@ GenericInstruction::GenericInstruction(
     form(form), instr(instruction),
     regs(std::move(form.get_registers(instruction))), req(regs) {}
 
-GenericInstruction::GenericInstruction(GenericInstruction &&i) :
+GenericInstruction::GenericInstruction(GenericInstruction &&i) noexcept :
     form(i.form), instr(i.instr), regs(std::move(i.regs)), req(regs) {}
 
 const InstructionForm &GenericInstruction::get_form() const noexcept {

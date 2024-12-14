@@ -15,11 +15,11 @@ void InstructionRegistry::add_instruction(
     InstructionFunctor &funct,
     ExecutorDeviceInterface &exec
 ) {
-    if (registry.find(opcode) != registry.end())
+    auto res = registry.emplace(opcode, registry_entry(form, funct, exec));
+    if (!res.second)
         throw KeyError(std::format(
             "Instruction with opcode {} is already registered", opcode
         ));
-    registry.insert({opcode, registry_entry(form, funct, exec)});
 }
 
 GenericInstruction InstructionRegistry::parse_instruction(BaseInstruction i

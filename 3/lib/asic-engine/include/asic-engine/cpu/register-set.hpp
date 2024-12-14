@@ -54,7 +54,7 @@ class RegisterSet {
     explicit RegisterSet(std::shared_ptr<register_t> rd);
 
     RegisterSet(const RegisterSet &) = delete;
-    RegisterSet(RegisterSet &&rs) = default;
+    RegisterSet(RegisterSet &&rs) noexcept = default;
     ~RegisterSet() = default;
 
     /**

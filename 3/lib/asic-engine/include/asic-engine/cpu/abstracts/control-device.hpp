@@ -14,7 +14,7 @@
  * */
 class ControlDeviceInterface : public HandlerDevice {
   public:
-    virtual ~ControlDeviceInterface() {};
+    virtual ~ControlDeviceInterface() = default;
     /** @brief Получить счётчик команд */
     virtual std::atomic_uint32_t &get_pc() noexcept = 0;
     virtual const std::atomic_uint32_t &get_pc() const noexcept = 0;

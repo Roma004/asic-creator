@@ -32,7 +32,7 @@
  **/
 class InstructionForm {
   public:
-    virtual ~InstructionForm() {};
+    virtual ~InstructionForm() = default;
     /** @brief получить строковое название формы */
     virtual const std::string &get_form() const noexcept = 0;
 

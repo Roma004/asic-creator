@@ -23,7 +23,7 @@
  **/
 class ExecutorDeviceInterface : public HandlerDevice {
   public:
-    virtual ~ExecutorDeviceInterface() {}
+    virtual ~ExecutorDeviceInterface() = default;
     /**
      * @brief Добавить инструкцию на исполнение
      * @param[i] Инструкция, которую исполнитель должен исполнить

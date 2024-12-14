@@ -11,7 +11,7 @@ using regid_t = uint32_t;
  * */
 class RegisterBlock {
   public:
-    virtual ~RegisterBlock() {};
+    virtual ~RegisterBlock() = default;
     /**
      * @brief Класс ссылки на конкретный регистр блока регистров
      *
@@ -38,7 +38,7 @@ class RegisterBlock {
         /** @brief получить ссылку на соответствующий блок регистров */
         virtual RegisterBlock &get_register_block() const = 0;
 
-        virtual ~RegisterReference() {};
+        virtual ~RegisterReference() = default;
 
         virtual bool operator==(const RegisterReference &) const = 0;
     };

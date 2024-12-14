@@ -13,7 +13,7 @@
  * */
 class InstructionFunctor {
   public:
-    virtual ~InstructionFunctor() {};
+    virtual ~InstructionFunctor() = default;
     virtual void operator()(GenericInstruction &) = 0;
 };
 

@@ -20,7 +20,7 @@ class RegisterRequest {
   public:
     RegisterRequest(RegisterSet &regs);
     RegisterRequest(const RegisterRequest &) = delete;
-    RegisterRequest(RegisterRequest &&) = default;
+    RegisterRequest(RegisterRequest &&) noexcept = default;
 
     /** @brief владеет ли запрос всеми назначенными регистрами */
     bool is_ready() const noexcept;

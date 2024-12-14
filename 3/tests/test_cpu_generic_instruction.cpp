@@ -2,7 +2,6 @@
 #include "asic-engine/cpu/generic-instruction.hpp"
 #include "asic-engine/cpu/register-request-manager.hpp"
 #include "asic-engine/cpu/register-request.hpp"
-#include "asic-engine/cpu/register-set.hpp"
 #include "lib/test-instruction-form.hpp"
 #include "lib/test-register-block.hpp"
 #include <catch2/catch_message.hpp>
@@ -46,6 +45,19 @@ TEST_CASE("Generic Instruction functionality", "[cpu][generic_instruction]") {
             REQUIRE(i.get_opcode() == 0x7b);
             REQUIRE(i.get_minor() == 0x3);
             REQUIRE(i.get_sub_minor() == 0);
+        }
+
+        SECTION("Check for instruction move operator") {
+            GenericInstruction ii(std::move(i));
+
+            REQUIRE(ii.get_form().get_form() == "TEST");
+            REQUIRE(
+                ii.get_instruction().get_instruction() == bi.get_instruction()
+            );
+            REQUIRE(ii.get_immediate() == 0x7f);
+            REQUIRE(ii.get_opcode() == 0x7b);
+            REQUIRE(ii.get_minor() == 0x3);
+            REQUIRE(ii.get_sub_minor() == 0);
         }
 
         SECTION("Check for instruction registers") {

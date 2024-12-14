@@ -10,7 +10,7 @@
  * */
 class DataMasterPortInterface {
   public:
-    virtual ~DataMasterPortInterface() {};
+    virtual ~DataMasterPortInterface() = default;
     /** @brief Процитать 4 байта, лежищие по заданному адресу */
     virtual uint32_t read32(addr_t) = 0;
 };
