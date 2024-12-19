@@ -12,31 +12,28 @@ include_directories(lib/thread-safe-containers)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON CACHE INTERNAL "")
 
 add_subdirectory(lib)
-# add_subdirectory(lib/tri-register)
-
 
 option(DOXYGEN "create documentation" OFF)
 option(TESTING "compile binaries for testing" OFF)
 option(RVPROC "compile test ricsc-v proccessor")
 
-# if (RVPROC)
-#     find_package(nlohmann_json 3.2.0 REQUIRED)
-#     file(GLOB_RECURSE SRC_FILES "${PROJECT_SOURCE_DIR}/prog/*.cpp")
-#     add_executable(proc ${SRC_FILES})
-#     target_include_directories(proc PUBLIC prog/include)
-#     target_include_directories(proc PUBLIC lib/asic-engine/include)
-#     target_include_directories(proc PUBLIC lib/asic-runner/include)
-#     target_include_directories(proc PUBLIC lib/logger/include)
-#     target_include_directories(proc PUBLIC lib/mod-loader/include)
-#     # TODO foreach
-#     target_include_directories(proc PUBLIC lib/modules/common/include)
-#     target_link_libraries(proc PRIVATE nlohmann_json::nlohmann_json)
-#     target_link_libraries(proc PUBLIC asic-engine)
-#     target_link_libraries(proc PUBLIC asic-runner)
-#     target_link_libraries(proc PUBLIC mod-loader)
-#     target_link_libraries(proc PUBLIC roma004-logger)
-#     target_link_libraries(proc PUBLIC modules-common)
-# endif (RVPROC)
+if (RVPROC)
+    find_package(nlohmann_json 3.2.0 REQUIRED)
+    file(GLOB_RECURSE SRC_FILES "${PROJECT_SOURCE_DIR}/prog/*.cpp")
+    add_executable(proc ${SRC_FILES})
+    target_include_directories(proc PUBLIC prog/include)
+    target_include_directories(proc PUBLIC lib/asic-engine/include)
+    target_include_directories(proc PUBLIC lib/asic-runner/include)
+    target_include_directories(proc PUBLIC lib/logger/include)
+    target_include_directories(proc PUBLIC lib/mod-loader/include)
+    target_include_directories(proc PUBLIC lib/modules/common/include)
+    target_link_libraries(proc PRIVATE nlohmann_json::nlohmann_json)
+    target_link_libraries(proc PUBLIC asic-engine)
+    target_link_libraries(proc PUBLIC asic-runner)
+    target_link_libraries(proc PUBLIC mod-loader)
+    target_link_libraries(proc PUBLIC roma004-logger)
+    target_link_libraries(proc PUBLIC modules-common)
+endif (RVPROC)
 
 if (DOXYGEN)
     find_package(Doxygen)
@@ -58,27 +55,15 @@ endif (DOXYGEN)
 
 if (TESTING)
     find_package(Catch2 REQUIRED)
-    # file(GLOB_RECURSE TEST_FILES "${PROJECT_SOURCE_DIR}/tests/*.cpp")
 
     set(TEST_FILES
-        # tests/test_master_bus.cpp
         tests/test_cpu_base_instruction.cpp
         tests/test_cpu_generic_instruction.cpp
         tests/test_cpu_registers_set.cpp
         tests/test_cpu_register_request.cpp
         tests/test_cpu_register_request_manager.cpp
         tests/test_cpu_instruction_registry.cpp
-        # tests/test_cpu_default_executor_device.cpp
-        # tests/test_cpu_data_master_port.cpp
         tests/test_dm_switch_context.cpp
-        # tests/test_dm_interconnect_packet.cpp
-        # tests/test_dm_packet_queue.cpp
-        # tests/test_dm_packet_receiver.cpp
-        # tests/test_dm_packet_sender.cpp
-        # tests/test_dm_device_gate.cpp
-        # tests/test_dm_cpu_gate.cpp
-        # tests/test_dm_default_device.cpp
-        # tests/test_dm_switch.cpp
         tests/test_ring.cpp
         tests/test_concurent_queue.cpp
     )
@@ -89,12 +74,10 @@ if (TESTING)
     target_compile_options(${ALL_TESTS} PUBLIC "--coverage")
     target_include_directories(${ALL_TESTS} PUBLIC lib/asic-engine/include)
     target_include_directories(${ALL_TESTS} PUBLIC lib/modules/modules/synk-executor-device/include)
-    # target_include_directories(${ALL_TESTS} PUBLIC lib/modules/common/include)
     target_link_libraries(${ALL_TESTS} PRIVATE
                           gcov
                           asic-engine_gcov
                           synk-executor-device_gcov
-                          # modules-common_gcov
                           Catch2::Catch2WithMain)
     add_test(NAME ${ALL_TESTS} COMMAND ${ALL_TESTS})
 endif (TESTING)
