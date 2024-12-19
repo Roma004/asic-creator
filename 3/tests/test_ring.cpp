@@ -40,6 +40,77 @@ TEST_CASE(
         REQUIRE(r.back() == UnstableConstructable("ok3"));
     }
 
+    SECTION("If emplace does not throw exception for fail-copyable") {
+        Ring<UnstableCopyable> r;
+        REQUIRE_NOTHROW(r.emplace("ok1"));
+        REQUIRE_NOTHROW(r.emplace("ok2"));
+        REQUIRE_NOTHROW(r.emplace("fail"));
+        REQUIRE_NOTHROW(r.emplace("ok3"));
+    }
+
+    SECTION("If move constructor does not fail for fail-copyable") {
+        Ring<UnstableCopyable> r;
+        r.emplace("ok1");
+        r.emplace("ok2");
+        r.emplace("fail");
+        r.emplace("ok3");
+
+        REQUIRE_NOTHROW([&r]() {
+            Ring<UnstableCopyable> r1(std::move(r));
+        }());
+    }
+
+    SECTION("If push(const T &) fails because of fail-copy but queue is still valid") {
+        Ring<UnstableCopyable> r;
+
+        UnstableCopyable fail("fail");
+
+        REQUIRE_NOTHROW(r.emplace("ok1"));
+        REQUIRE_NOTHROW(r.emplace("ok2"));
+        REQUIRE_THROWS(r.push(fail));
+
+        REQUIRE(r.size() == 2);
+        REQUIRE(r.front() == UnstableCopyable("ok1"));
+        REQUIRE(r.back() == UnstableCopyable("ok2"));
+
+        REQUIRE_NOTHROW(r.emplace("ok3"));
+
+        REQUIRE(r.size() == 3);
+        REQUIRE(r.front() == UnstableCopyable("ok1"));
+        REQUIRE(r.back() == UnstableCopyable("ok3"));
+    }
+
+    SECTION("If push(T &&) does not fail for fail-copy object") {
+        Ring<UnstableCopyable> r;
+
+        UnstableCopyable fail("fail");
+
+        REQUIRE_NOTHROW(r.emplace("ok1"));
+        REQUIRE_NOTHROW(r.emplace("ok2"));
+        REQUIRE_NOTHROW(r.push(std::move(fail)));
+        REQUIRE_NOTHROW(r.emplace("ok3"));
+    }
+
+    SECTION("If push(T &&) fails because of fail-move but queue is still valid") {
+        Ring<UnstableMovable> r;
+
+        UnstableMovable fail("fail");
+
+        REQUIRE_NOTHROW(r.emplace("ok1"));
+        REQUIRE_NOTHROW(r.emplace("ok2"));
+        REQUIRE_THROWS(r.push(std::move(fail)));
+
+        REQUIRE(r.size() == 2);
+        REQUIRE(r.front() == UnstableMovable("ok1"));
+        REQUIRE(r.back() == UnstableMovable("ok2"));
+
+        REQUIRE_NOTHROW(r.emplace("ok3"));
+
+        REQUIRE(r.size() == 3);
+        REQUIRE(r.front() == UnstableMovable("ok1"));
+        REQUIRE(r.back() == UnstableMovable("ok3"));
+    }
+
     SECTION("Emplace") {
         Ring<TestCompositeType> r;
 
